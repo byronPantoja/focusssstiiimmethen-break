@@ -1,24 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, StyleSheet, Platform } from 'react-native';
-import { Focus } from './src/features/focus/Focus';
-import { FocusHistory } from './src/features/focus/FocusHistory';
-import { Timer } from './src/features/timer/Timer';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, Text, StyleSheet, Platform } from "react-native";
+import { Focus } from "./src/features/focus/Focus";
+import { FocusHistory } from "./src/features/focus/FocusHistory";
+import { Timer } from "./src/features/timer/Timer";
 
-import { colors } from './src/utils/colors';
-import { spacing } from './src/utils/sizes';
+import { colors } from "./src/utils/colors";
+import { spacing } from "./src/utils/sizes";
 
 const STATUSES = {
   COMPLETE: 1,
   CANCELLED: 2,
 };
 
+const Container = styled.View`
+  flex: 1;
+  padding-top: ${Platform.OS === "ios"} ? ${spacing.xl} : ${spacing.xxl};
+  background-color: ${colors.lightBlue};
+`;
+
 export default function App() {
   const [focusSubject, setFocusSubject] = useState(null);
   const [focusHistory, setFocusHistory] = useState([]);
 
   const addFocusHistorySubjectWithStatus = (subject, status) => {
-    setFocusHistory([...focusHistory, { key: String(focusHistory.length + 1), subject, status }]);
+    setFocusHistory([
+      ...focusHistory,
+      { key: String(focusHistory.length + 1), subject, status },
+    ]);
   };
 
   const onClear = () => {
@@ -27,7 +37,7 @@ export default function App() {
 
   const saveFocusHistory = async () => {
     try {
-      await AsyncStorage.setItem('focusHistory', JSON.stringify(focusHistory));
+      await AsyncStorage.setItem("focusHistory", JSON.stringify(focusHistory));
     } catch (e) {
       console.log(e);
     }
@@ -35,7 +45,7 @@ export default function App() {
 
   const loadFocusHistory = async () => {
     try {
-      const history = await AsyncStorage.getItem('focusHistory');
+      const history = await AsyncStorage.getItem("focusHistory");
 
       if (history && JSON.parse(history).length) {
         setFocusHistory(JSON.parse(history));
@@ -54,7 +64,7 @@ export default function App() {
   }, [focusHistory]);
 
   return (
-    <View style={styles.container}>
+    <Container>
       {focusSubject ? (
         <Timer
           focusSubject={focusSubject}
@@ -74,7 +84,7 @@ export default function App() {
           <FocusHistory focusHistory={focusHistory} onClear={onClear} />
         </View>
       )}
-    </View>
+    </Container>
   );
 }
 
@@ -84,11 +94,3 @@ export default function App() {
 //   }
 // }, [focusSubject]);
 // console.log(focusHistory);
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: Platform.OS === 'ios' ? spacing.xl : spacing.xxl,
-    backgroundColor: colors.lightBlue,
-  },
-});
