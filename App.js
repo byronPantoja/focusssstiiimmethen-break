@@ -1,18 +1,29 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import styled, { ThemeProvider } from "styled-components/native";
 import { View, Text, StyleSheet, Platform } from "react-native";
 import { Focus } from "./src/features/focus/Focus";
 import { FocusHistory } from "./src/features/focus/FocusHistory";
 import { Timer } from "./src/features/timer/Timer";
 
+import { theme } from "./src/infrastructure/theme";
 import { colors } from "./src/utils/colors";
 import { spacing } from "./src/utils/sizes";
 
 const STATUSES = {
   COMPLETE: 1,
   CANCELLED: 2,
+};
 
+const Container = styled.View`
+  flex: 1;
+  padding-top: ${Platform.OS === "ios" ? theme.space[3] : theme.space[4]};
+  background-color: ${theme.colors.bg.primary};
+`;
+
+const FocusView = styled.View`
+  flex: 1;
+`;
 
 export default function App() {
   const [focusSubject, setFocusSubject] = useState(null);
@@ -58,27 +69,37 @@ export default function App() {
   }, [focusHistory]);
 
   return (
-    <Container>
-      {focusSubject ? (
-        <Timer
-          focusSubject={focusSubject}
-          onTimerEnd={() => {
-            addFocusHistorySubjectWithStatus(focusSubject, STATUSES.COMPLETE);
-            setFocusSubject(null);
-          }}
-          clearSubject={() => {
-            addFocusHistorySubjectWithStatus(focusSubject, STATUSES.CANCELLED);
+    <>
+      <ThemeProvider theme={theme}>
+        <Container>
+          {focusSubject ? (
+            <Timer
+              focusSubject={focusSubject}
+              onTimerEnd={() => {
+                addFocusHistorySubjectWithStatus(
+                  focusSubject,
+                  STATUSES.COMPLETE
+                );
+                setFocusSubject(null);
+              }}
+              clearSubject={() => {
+                addFocusHistorySubjectWithStatus(
+                  focusSubject,
+                  STATUSES.CANCELLED
+                );
 
-            setFocusSubject(null);
-          }}
-        />
-      ) : (
-        <View style={{ flex: 1 }}>
-          <Focus addSubject={setFocusSubject} />
-          <FocusHistory focusHistory={focusHistory} onClear={onClear} />
-        </View>
-      )}
-    </Container>
+                setFocusSubject(null);
+              }}
+            />
+          ) : (
+            <FocusView>
+              <Focus addSubject={setFocusSubject} />
+              <FocusHistory focusHistory={focusHistory} onClear={onClear} />
+            </FocusView>
+          )}
+        </Container>
+      </ThemeProvider>
+    </>
   );
 }
 

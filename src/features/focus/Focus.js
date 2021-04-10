@@ -7,14 +7,10 @@ import { RoundedButton } from "../../components/RoundedButton";
 import { fontSizes, spacing } from "../../utils/sizes";
 import { colors } from "../../utils/colors";
 
-const FocusContainer = styled.View`
-  flex: 0.5;
-`;
-
 export const Focus = ({ addSubject }) => {
   const [subject, setSubject] = useState(null);
   return (
-    <FocusContainer>
+    <View style={styles.container}>
       <View style={styles.innerContainer}>
         <Text style={styles.title}> What would you like to focus on?</Text>
 
@@ -38,7 +34,7 @@ export const Focus = ({ addSubject }) => {
           />
         </View>
       </View>
-    </FocusContainer>
+    </View>
   );
 };
 
