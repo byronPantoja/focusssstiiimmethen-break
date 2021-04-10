@@ -1,9 +1,36 @@
-import React from 'react';
-import { View, StyleSheet, FlatList, Text, SafeAreaView } from 'react-native';
+import React from "react";
+import styled from "styled-components/native";
 
-import { fontSizes, spacing } from '../../utils/sizes';
-import { colors } from '../../utils/colors';
-import { RoundedButton } from '../../components/RoundedButton';
+import { View, StyleSheet, FlatList, Text, SafeAreaView } from "react-native";
+
+import { theme } from "../../infrastructure/theme";
+import { fontSizes, spacing } from "../../utils/sizes";
+import { colors } from "../../utils/colors";
+import { RoundedButton } from "../../components/RoundedButton";
+
+const SafeArea = styled(SafeAreaView)`
+  flex: 0.5;
+  align-items: ${"center"};
+`;
+
+const Title = styled.Text`
+  color: ${theme.colors.text.secondary};
+  font-size: ${theme.fontSizes.h3};
+  align-items: ${"center"};
+`;
+
+const FlatListStyle = styled(FlatList)`
+  flex: 1;
+  contentContainerStyle = {
+    flex: 1;
+    align-items: ${"center"};
+  }
+`;
+
+const ClearContainer = styled.View`
+  align-items: ${"center"};
+  padding: ${theme.space[3]};
+`;
 
 const HistoryItem = ({ item, index }) => {
   return <Text style={styles.historyItem(item.status)}>{item.subject}</Text>;
@@ -16,43 +43,29 @@ export const FocusHistory = ({ focusHistory, onClear }) => {
 
   return (
     <>
-      <SafeAreaView style={{ flex: 0.5, alignItems: 'center'}}>
-        <Text style={styles.title}>History</Text>
+      <SafeArea>
+        <Title>History</Title>
         {!!focusHistory.length && (
           <>
-            <FlatList
-              style={{ flex: 1 }}
-              contentContainerStyle={{ flex: 1, alignItems: 'center' }}
-              data={focusHistory}
-              renderItem={HistoryItem}
-            />
+            <FlatListStyle data={focusHistory} renderItem={HistoryItem} />
 
-            <View style={styles.clearContainer}>
+            <ClearContainer>
               <RoundedButton
                 size={75}
                 title="Clear"
                 onPress={() => onClear()}
               />
-            </View>
+            </ClearContainer>
           </>
         )}
-      </SafeAreaView>
+      </SafeArea>
     </>
   );
 };
-
+// TODO: Need to change this but not sure how. Come back later.
 const styles = StyleSheet.create({
   historyItem: (status) => ({
-    color: status > 1 ? 'red' : 'green',
+    color: status > 1 ? "red" : "green",
     fontSize: fontSizes.md,
   }),
-  title: {
-    color: colors.darkestBlue,
-    fontSize: fontSizes.lg,
-    alignItems: 'center',
-  },
-  clearContainer: {
-    alignItems: 'center',
-    padding: spacing.md,
-  },
 });
