@@ -4,23 +4,47 @@ import { View, Text, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { RoundedButton } from "../../components/RoundedButton";
 
+import { theme } from "../../infrastructure/theme";
 import { fontSizes, spacing } from "../../utils/sizes";
 import { colors } from "../../utils/colors";
+
+const OuterContainer = styled.View`
+  flex: 0.5;
+`;
+
+const InnerContainer = styled.View`
+  flex: 1;
+  padding: ${theme.space[4]};
+  justify-content: ${"center"};
+`;
+
+const Title = styled.Text`
+  color: ${theme.colors.text.primary};
+  font-weight: ${theme.fontWeights.bold};
+  font-size: ${theme.fontSizes.h5};
+`;
+
+const InputContainer = styled.View`
+  padding-top: ${theme.space[3]};
+  flex-direction: ${"row"};
+  align-items: ${"center"};
+`;
+
+const TextInputStyle = styled(TextInput)`
+  flex: 1;
+  margin-right: ${theme.space[3]};
+  background-color: ${theme.colors.bg.secondary};
+`;
 
 export const Focus = ({ addSubject }) => {
   const [subject, setSubject] = useState(null);
   return (
-    <View style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}> What would you like to focus on?</Text>
+    <OuterContainer>
+      <InnerContainer>
+        <Title> What would you like to focus on?</Title>
 
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={{
-              flex: 1,
-              marginRight: spacing.md,
-              backgroundColor: colors.grey,
-            }}
+        <InputContainer>
+          <TextInputStyle
             onSubmitEditing={({ nativeEvent }) => {
               setSubject(nativeEvent.text);
             }}
@@ -32,29 +56,8 @@ export const Focus = ({ addSubject }) => {
               addSubject(subject);
             }}
           />
-        </View>
-      </View>
-    </View>
+        </InputContainer>
+      </InnerContainer>
+    </OuterContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 0.5,
-  },
-  innerContainer: {
-    flex: 1,
-    padding: spacing.md,
-    justifyContent: "center",
-  },
-  title: {
-    color: colors.offWhite,
-    fontWeight: "bold",
-    fontSize: 24,
-  },
-  inputContainer: {
-    paddingTop: spacing.md,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});
