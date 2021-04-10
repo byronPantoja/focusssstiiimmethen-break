@@ -12,13 +12,7 @@ import { spacing } from "./src/utils/sizes";
 const STATUSES = {
   COMPLETE: 1,
   CANCELLED: 2,
-};
 
-const Container = styled.View`
-  flex: 1;
-  padding-top: ${Platform.OS === "ios"} ? ${spacing.xl} : ${spacing.xxl};
-  background-color: ${colors.lightBlue};
-`;
 
 export default function App() {
   const [focusSubject, setFocusSubject] = useState(null);
